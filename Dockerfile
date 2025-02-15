@@ -1,4 +1,5 @@
-FROM node:20-slim AS studio-builder
+ARG ARCH=${ARCH:-linux/amd64}
+FROM --platform=${ARCH} node:20-slim AS studio-builder
 # moved earlier for efficiency and caching
 
 RUN apt-get update -qq && \
@@ -25,6 +26,10 @@ COPY bin/supabase .
 
 RUN pnpm dlx turbo@2.3.3 prune studio --docker
 RUN pnpm install --frozen-lockfile
+
+# bug fix
+sed -i 's|next build && ./../../scripts/upload-static-assets.sh|next build|' package.json
+
 RUN pnpm dlx turbo@2.3.3 run build --filter studio -- --no-lint
 
 FROM supabase/postgres:15.8.1.020 AS base
