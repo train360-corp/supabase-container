@@ -8,7 +8,7 @@ deps:
 		mkdir bin && cd bin \
 		&& git clone --depth=1 --filter=blob:none --sparse --branch 1.25.01 https://github.com/supabase/supabase.git \
 		&& cd supabase \
-		&& git sparse-checkout set apps/studio \
+		&& git sparse-checkout set apps/studio packages \
 	)
 
 build: deps
