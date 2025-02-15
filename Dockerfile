@@ -6,12 +6,6 @@ RUN apt-get update -qq && \
   rm -rf /var/lib/apt/lists/* && \
   update-ca-certificates
 
-# install Node (shared dep) [NOT NEEDED HERE]
-#RUN curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
-#RUN bash nodesource_setup.sh
-#RUN rm -rf nodesource_setup.sh
-#RUN apt-get install nodejs -y
-
 WORKDIR /supabase/studio
 
 RUN apt-get update -qq \
@@ -27,19 +21,24 @@ RUN pnpm dlx turbo@2.3.3 prune studio --docker
 RUN pnpm install --frozen-lockfile
 
 # bug fix
-RUN sed -i 's|next build && ./../../scripts/upload-static-assets.sh|next build|' package.json
-
+RUN sed -i 's|next build && ./../../scripts/upload-static-assets.sh|next build|' apps/studio/package.json
 RUN pnpm dlx turbo@2.3.3 run build --filter studio -- --no-lint
+
+###############################################
+# DATABASE (base image)
+# See: https://github.com/supabase/supabase/blob/master/docker/docker-compose.yml#L387
+###############################################
 
 FROM supabase/postgres:15.8.1.020 AS base
 
 RUN mkdir "/supabase"
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y curl gettext
 
-###############################################
-# DATABASE
-# See: https://github.com/supabase/supabase/blob/master/docker/docker-compose.yml#L387
-###############################################
+# install Node (shared dep)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
+RUN bash nodesource_setup.sh
+RUN rm -rf nodesource_setup.sh
+RUN apt-get install nodejs -y
 
 # Create necessary directories
 RUN mkdir -p /docker-entrypoint-initdb.d/migrations \
@@ -124,10 +123,12 @@ FROM postgrest AS studio
 
 WORKDIR /supabase/studio
 
-RUN mkdir /supabase/studio/bin
-COPY --from=studio-builder /supabase/studio/public ./bin/public
-COPY --from=studio-builder /supabase/studio/.next/standalone ./
-COPY --from=studio-builder /supabase/studio/.next/static ./bin/.next/static
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=studio-builder --chown=nextjs:nodejs /supabase/studio/apps/studio/.next/standalone .
+COPY --from=studio-builder --chown=nextjs:nodejs /supabase/studio/apps/studio/public ./apps/studio/public
+COPY --from=studio-builder --chown=nextjs:nodejs /supabase/studio/apps/studio/.next/static ./apps/studio/.next/static
 
 ###############################################
 # (start)

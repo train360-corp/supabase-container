@@ -10,10 +10,10 @@ consumers:
   - username: DASHBOARD
   - username: anon
     keyauth_credentials:
-      - key: $SUPABASE_ANON_KEY
+      - key: ${SUPABASE_ANON_KEY}
   - username: service_role
     keyauth_credentials:
-      - key: $SUPABASE_SERVICE_KEY
+      - key: ${SUPABASE_SERVICE_KEY}
 
 ###
 ### Access Control List
@@ -29,8 +29,8 @@ acls:
 ###
 basicauth_credentials:
   - consumer: DASHBOARD
-    username: $DASHBOARD_USERNAME
-    password: $DASHBOARD_PASSWORD
+    username: ${DASHBOARD_USERNAME}
+    password: ${DASHBOARD_PASSWORD}
 
 ###
 ### API Routes
@@ -210,8 +210,8 @@ services:
 
   ## Secure Database routes
   - name: meta
-    _comment: 'pg-meta: /pg/* -> http://pg-meta:8080/*'
-    url: http://meta:8080/
+    _comment: 'pg-meta: /pg/* -> http://127.0.0.1:8080/*'
+    url: http://127.0.0.1:8080/
     routes:
       - name: meta-all
         strip_path: true
@@ -229,8 +229,8 @@ services:
 
   ## Protected Dashboard - catch all remaining routes
   - name: dashboard
-    _comment: 'Studio: /* -> http://studio:3000/*'
-    url: http://studio:3000/
+    _comment: 'Studio: /* -> http://127.0.0.1:3333/*'
+    url: http://127.0.0.1:3333/
     routes:
       - name: dashboard-all
         strip_path: true
@@ -240,4 +240,4 @@ services:
       - name: cors
       - name: basic-auth
         config:
-          hide_credentials: true
+          hide_credentials: false

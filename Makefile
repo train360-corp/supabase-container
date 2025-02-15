@@ -16,7 +16,7 @@ build: deps
 
 start: run
 
-run:
+run: stop
 	docker run -v ./pg_data:/var/lib/postgresql/data --env-file ./.env --platform linux/amd64 --rm -d --name $(CONTAINER_NAME) -p 5432:5432 -p 8000:8000 -p 8443:8443 $(IMAGE_NAME)
 
 stop:
