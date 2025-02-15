@@ -8,6 +8,8 @@ dep-bin:
 
 dep-studio: bin
 	test -d bin/supabase || ( \
+		mkdir bin/supabase &&
+		cd bin &&
 		git clone --depth=1 --filter=blob:none --sparse --branch 1.25.01 https://github.com/supabase/supabase.git \
 		&& cd supabase \
 		&& git sparse-checkout set apps/studio packages \
