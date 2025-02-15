@@ -1,11 +1,21 @@
 # supabase-container
 
-## Getting Started
+## Coverage
 
-1. Update `supabase/kong.yml`
+The following Suapbase components have been successfully ported:
 
-Kong does not support configuration from environment variables
-
-  - look for the following lines
-
-2. 
+| Component | Supported |
+|-----------|-----------|
+| supavisor | ❌         |
+| vector    | ❌         |
+| db        | ✅         |
+| analytics | ❌         |
+| functions | ❌         |
+| meta      | ✅         |
+| imgproxy  | ❌         |
+| storage   | ❌         |
+| realtime  | ❌         |
+| rest      | ✅         |
+| auth      | ❌         |
+| kong      | ✅         |
+| studio    | ✅         |
