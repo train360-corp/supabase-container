@@ -45,4 +45,4 @@ The following Suapbase components have been successfully ported:
 | kong      | ✅         | 3.9.0      |
 | studio    | ✅         | 1.25.01    |
 
-* indicates in-progress builds
+(*) indicates in-progress builds
