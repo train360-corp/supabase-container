@@ -12,6 +12,20 @@ cd ~/supabase
 curl -OL https://raw.githubusercontent.com/train360-corp/supabase-container/refs/heads/main/.env
 
 # start supabase
+
+docker run \
+  -v ./pg_data:/var/lib/postgresql/data \
+  --env-file ./.env \
+  --platform linux/amd64 \
+  --rm \
+  -d \
+  --name supabase \
+  -p 5432:5432 \
+  -p 8000:8000 \
+  -p 8443:8443 \
+  ghcr.io/train360-corp/supabase-container:latest
+
+# FOR REFERENCE ONLY (COPY AND PASTE ABOVE)
 docker run \
   -v ./pg_data:/var/lib/postgresql/data \ # postgres data persisted locally
   --env-file ./.env \ # load env file
@@ -24,6 +38,12 @@ docker run \
   -p 8443:8443 \ # kong https port
   ghcr.io/train360-corp/supabase-container:latest
 ```
+
+## Roadmap
+
+* complete coverage
+* one-click deploy options
+  * Digital Ocean
 
 ## Coverage
 
