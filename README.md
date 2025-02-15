@@ -5,6 +5,7 @@
 ```shell
 # create a working directory
 mkdir ~/supabase
+cd ~/supabase
 
 # copy environment variables
 # TODO: make sure to update values as commented in the .env file
