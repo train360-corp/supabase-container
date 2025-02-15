@@ -131,10 +131,32 @@ COPY --from=studio-builder --chown=nextjs:nodejs /supabase/studio/apps/studio/pu
 COPY --from=studio-builder --chown=nextjs:nodejs /supabase/studio/apps/studio/.next/static ./apps/studio/.next/static
 
 ###############################################
+# META
+# See: https://github.com/supabase/postgres-meta/blob/master/Dockerfile
+###############################################
+FROM studio AS meta
+WORKDIR /supabase/meta
+
+WORKDIR /supabase/meta/bin
+RUN apt-get update && apt-get install -y \
+    ca-certificates git build-essential python3 \
+    && rm -rf /var/lib/apt/lists/*
+COPY bin/postgres-meta/package.json ./
+COPY bin/postgres-meta/package-lock.json ./
+RUN npm clean-install
+COPY bin/postgres-meta/ .
+RUN npm run build && npm prune --omit=dev
+
+WORKDIR /supabase/meta
+RUN mv /supabase/meta/bin/node_modules node_modules
+RUN mv /supabase/meta/bin/dist dist
+COPY bin/postgres-meta/package.json ./
+
+###############################################
 # (start)
 ###############################################
 
-FROM studio AS runner
+FROM meta AS runner
 
 WORKDIR /
 

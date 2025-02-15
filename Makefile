@@ -3,13 +3,23 @@
 IMAGE_NAME=supabase-container
 CONTAINER_NAME=sb-container
 
-deps:
-	test -d bin || ( \
-		mkdir bin && cd bin \
-		&& git clone --depth=1 --filter=blob:none --sparse --branch 1.25.01 https://github.com/supabase/supabase.git \
+dep-bin:
+	test -d bin || mkdir bin
+
+dep-studio: bin
+	test -d bin/supabase || ( \
+		git clone --depth=1 --filter=blob:none --sparse --branch 1.25.01 https://github.com/supabase/supabase.git \
 		&& cd supabase \
 		&& git sparse-checkout set apps/studio packages \
 	)
+
+dep-meta: bin
+	test -d bin/postgres-meta || ( \
+		git clone --depth=1 --branch v0.84.2 https://github.com/supabase/postgres-meta.git bin/postgres-meta \
+		&& cd bin/postgres-meta \
+	)
+
+deps: dep-bin dep-studio dep-meta
 
 build: deps
 	docker build --platform linux/amd64 -t $(IMAGE_NAME) .
