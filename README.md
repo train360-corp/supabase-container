@@ -41,6 +41,8 @@ The following Suapbase components have been successfully ported:
 | storage   | ❌         |            |
 | realtime  | ❌         |            |
 | rest      | ✅         | 12.2.8     |
-| auth      | ❌         |            |
+| auth      | ❌         | 2.169.0*   |
 | kong      | ✅         | 3.9.0      |
 | studio    | ✅         | 1.25.01    |
+
+* indicates in-progress builds
