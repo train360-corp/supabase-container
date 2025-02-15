@@ -153,10 +153,39 @@ RUN mv /supabase/meta/bin/dist dist
 COPY bin/postgres-meta/package.json ./
 
 ###############################################
+# AUTH
+# See: https://github.com/supabase/auth/blob/master/Dockerfile
+###############################################
+
+FROM meta AS auth
+
+ENV GO111MODULE=on
+ENV CGO_ENABLED=0
+ENV GOOS=linux
+
+WORKDIR /supabase/auth
+
+WORKDIR /supabase/auth/bin
+RUN dpkg --add-architecture amd64
+RUN apt-get update && apt-get install -y libc6:amd64
+RUN curl -fsSL https://go.dev/dl/go1.21.7.linux-amd64.tar.gz | tar -C /usr/local -xz
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+# Pulling dependencies
+COPY bin/auth/Makefile bin/auth/go.* ./
+RUN make deps
+
+# Building stuff
+COPY bin/auth/ .
+
+# Make sure you change the RELEASE_VERSION value before publishing an image.
+RUN RELEASE_VERSION=unspecified make build
+
+###############################################
 # (start)
 ###############################################
 
-FROM meta AS runner
+FROM auth AS runner
 
 WORKDIR /
 

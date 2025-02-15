@@ -6,6 +6,11 @@ CONTAINER_NAME=sb-container
 dep-bin:
 	test -d bin || mkdir bin
 
+dep-auth:
+	test -d bin/auth || ( \
+		git clone --depth=1 --branch v2.169.0 https://github.com/supabase/auth.git bin/auth \
+	)
+
 dep-studio: bin
 	test -d bin/supabase || ( \
 		mkdir bin/supabase && \
@@ -18,10 +23,9 @@ dep-studio: bin
 dep-meta: bin
 	test -d bin/postgres-meta || ( \
 		git clone --depth=1 --branch v0.84.2 https://github.com/supabase/postgres-meta.git bin/postgres-meta \
-		&& cd bin/postgres-meta \
 	)
 
-deps: dep-bin dep-studio dep-meta
+deps: dep-bin dep-studio dep-meta dep-auth
 
 build: deps
 	docker build --platform linux/amd64 -t $(IMAGE_NAME) .
