@@ -50,6 +50,8 @@ jobs:
       - run: |
           make deps
 
+      - uses: docker/setup-buildx-action@v3
+
       - name: build and push Docker image
         uses: docker/build-push-action@v6.13.0
         with:
