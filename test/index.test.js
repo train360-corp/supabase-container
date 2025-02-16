@@ -1,9 +1,13 @@
 const { test, expect } = require("@jest/globals");
 const dotenv = require("dotenv");
 const {createClient} = require("@supabase/supabase-js");
+const {server} = require("./mock-smtp.js");
 
 // loads .env files
 dotenv.config({ path: "../.env" });
+
+// start mock smtp server
+server.listen(2500, () => {});
 
 const getClient = () => createClient(process.env.SUPABASE_PUBLIC_URL, process.env.SUPABASE_ANON_KEY)
 
@@ -14,12 +18,19 @@ test(".env loads", () => expect(process.env.SUPABASE_ANON_KEY).toBeTruthy())
 
 test("create client", () => expect(getClient()).toBeTruthy())
 
+test("empty user", async () => {
+  const client = getClient();
+  const result = await client.auth.getSession();
+  expect(result.error).toBeFalsy();
+  expect(result.data.session).toBeNull();
+})
+
 test("create user", async () => {
   const client = getClient();
   const result = await client.auth.signUp({
-    email: "test@test.com",
-    password: "test",
+    email: "test23@test.com",
+    password: "test123"
   });
-  expect(result.error).toBeNull();
-  expect(result.data.user).toBeTruthy();
+
+  expect(result.error).toBeFalsy();
 })

@@ -11,21 +11,12 @@ dep-auth:
 		git clone --depth=1 --branch v2.169.0 https://github.com/supabase/auth.git bin/auth \
 	)
 
-dep-studio: bin
-	test -d bin/supabase || ( \
-		mkdir bin/supabase && \
-		cd bin && \
-		git clone --depth=1 --filter=blob:none --sparse --branch 1.25.01 https://github.com/supabase/supabase.git \
-		&& cd supabase \
-		&& git sparse-checkout set apps/studio packages \
-	)
-
 dep-meta: bin
 	test -d bin/postgres-meta || ( \
 		git clone --depth=1 --branch v0.84.2 https://github.com/supabase/postgres-meta.git bin/postgres-meta \
 	)
 
-deps: dep-bin dep-studio dep-meta dep-auth
+deps: dep-bin dep-meta dep-auth
 
 build: deps
 	docker build --platform linux/amd64 -t $(IMAGE_NAME) .

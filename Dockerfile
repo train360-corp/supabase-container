@@ -1,41 +1,7 @@
-FROM node:20-slim AS studio-builder
-# moved earlier for efficiency and caching
-
-RUN apt-get update -qq && \
-  apt-get install -y --no-install-recommends git python3 ca-certificates build-essential && \
-  rm -rf /var/lib/apt/lists/* && \
-  update-ca-certificates
-
-WORKDIR /supabase/studio
-
-RUN apt-get update -qq \
-  && apt-get install -y --no-install-recommends git python3 ca-certificates build-essential \
-  && rm -rf /var/lib/apt/lists/* \
-  && update-ca-certificates
-
-RUN npm install -g pnpm@9.15.5
-
-COPY bin/supabase .
-
-RUN pnpm dlx turbo@2.3.3 prune studio --docker
-RUN pnpm install --frozen-lockfile
-
-# bug fix
-RUN sed -i 's|next build && ./../../scripts/upload-static-assets.sh|next build|' apps/studio/package.json
-RUN pnpm dlx turbo@2.3.3 run build --filter studio -- --no-lint
-
-
-###############################################
-# AUTH
-# See: https://github.com/supabase/auth/blob/master/Dockerfile
-###############################################
-FROM ghcr.io/supabase/auth:v2.169.0 AS auth-base
-
 ###############################################
 # DATABASE (base image)
 # See: https://github.com/supabase/supabase/blob/master/docker/docker-compose.yml#L387
 ###############################################
-
 FROM supabase/postgres:15.8.1.020 AS base
 
 RUN mkdir "/supabase"
@@ -126,6 +92,7 @@ RUN rm -rf postgrest-v12.2.8-linux-static-x86-64.tar.xz
 # STUDIO
 # See: https://github.com/supabase/supabase/blob/master/apps/studio/Dockerfile
 ###############################################
+FROM ghcr.io/supabase/studio:20250113-83c9420 AS studio-base
 FROM postgrest AS studio
 
 WORKDIR /supabase/studio
@@ -133,9 +100,7 @@ WORKDIR /supabase/studio
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=studio-builder --chown=nextjs:nodejs /supabase/studio/apps/studio/.next/standalone .
-COPY --from=studio-builder --chown=nextjs:nodejs /supabase/studio/apps/studio/public ./apps/studio/public
-COPY --from=studio-builder --chown=nextjs:nodejs /supabase/studio/apps/studio/.next/static ./apps/studio/.next/static
+COPY --from=studio-base --chown=nextjs:nodejs /app .
 
 ###############################################
 # META
@@ -160,9 +125,10 @@ RUN mv /supabase/meta/bin/dist dist
 COPY bin/postgres-meta/package.json ./
 
 ###############################################
-# (start)
+# AUTH
+# See: https://github.com/supabase/auth/blob/master/Dockerfile
 ###############################################
-
+FROM ghcr.io/supabase/auth:v2.169.0 AS auth-base
 FROM meta AS auth
 
 WORKDIR /supabase/auth
@@ -173,8 +139,10 @@ COPY --from=auth-base /usr/local/bin/auth /supabase/auth
 COPY --from=auth-base /usr/local/etc/auth/migrations /supabase/auth/migrations/
 
 ENV GOTRUE_DB_MIGRATIONS_PATH=/supabase/auth/migrations
-#CMD ["auth"]
 
+###############################################
+# (start)
+###############################################
 FROM auth AS runner
 
 WORKDIR /

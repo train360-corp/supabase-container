@@ -43,26 +43,26 @@ docker run \
 
 * complete coverage
 * one-click deploy options
-  * Digital Ocean
+    * Digital Ocean
 
 ## Coverage
 
 The following Suapbase components have been successfully ported:
 
-| Component | Supported | Version    |
-|-----------|-----------|------------|
-| supavisor | ❌         |            |
-| vector    | ❌         |            |
-| db        | ✅         | 15.8.1.020 |
-| analytics | ❌         |            |
-| functions | ❌         |            |
-| meta      | ✅         | 0.84.2     |
-| imgproxy  | ❌         |            |
-| storage   | ❌         |            |
-| realtime  | ❌         |            |
-| rest      | ✅         | 12.2.8     |
-| auth      | ❌         | 2.169.0*   |
-| kong      | ✅         | 3.9.0      |
-| studio    | ✅         | 1.25.01    |
+| Component | Supported | Version          |
+|-----------|-----------|------------------|
+| supavisor | ❌         |                  |
+| vector    | ❌         |                  |
+| db        | ✅         | 15.8.1.020       |
+| analytics | ❌         |                  |
+| functions | ❌         |                  |
+| meta      | ✅         | 0.84.2           |
+| imgproxy  | ❌         |                  |
+| storage   | ❌         |                  |
+| realtime  | ❌         |                  |
+| rest      | ✅         | 12.2.8           |
+| auth      | ✅         | 2.169.0          |
+| kong      | ✅         | 3.9.0            |
+| studio    | ✅         | 20250113-83c9420 |
 
 (*) indicates in-progress builds
