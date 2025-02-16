@@ -67,8 +67,8 @@ services:
 
   ## Secure Auth routes
   - name: auth-v1
-    _comment: 'GoTrue: /auth/v1/* -> http://auth:9999/*'
-    url: http://auth:9999/
+    _comment: 'GoTrue: /auth/v1/* -> http://127.0.0.1:9999/*'
+    url: http://127.0.0.1:9999/
     routes:
       - name: auth-v1-all
         strip_path: true
