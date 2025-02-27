@@ -1,3 +1,5 @@
+name: Build Realtime
+
 on:
   workflow_dispatch:
     inputs:
@@ -30,6 +32,7 @@ jobs:
           tar -xvzf ${{ inputs.version }}.tar.gz && rm -rf ${{ inputs.version }}.tar.gz
           mv realtime-${{ inputs.version }}/* realtime-${{ inputs.version }}/.* . 2>/dev/null
           rmdir realtime-${{ inputs.version }}
+        continue-on-error: true
 
       - id: meta
         uses: docker/metadata-action@v4
