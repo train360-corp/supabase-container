@@ -50,6 +50,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - run: cd /tmp/build-realtime && ls -la && exit 1
+
       - id: build
         uses: docker/build-push-action@v3
         with:
