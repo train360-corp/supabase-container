@@ -11,11 +11,11 @@ on:
 
 permissions:
   contents: read
-  packages: write  # ✅ Required for pushing to GHCR
+  packages: write
 
 jobs:
   amd:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     env:
       arch: amd64
@@ -48,7 +48,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          logout: false  # ✅ Prevents logout before push
+          logout: false
 
       - id: build
         uses: docker/build-push-action@v3
@@ -100,7 +100,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          logout: false  # ✅ Prevents logout before push
+          logout: false
 
       - id: build
         uses: docker/build-push-action@v3
@@ -127,7 +127,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          logout: false  # ✅ Prevents logout before merge
+          logout: false
 
       - name: Merge multi-arch manifests for versioned output
         run: |
