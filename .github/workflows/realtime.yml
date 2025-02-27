@@ -26,11 +26,12 @@ jobs:
       image_digest: ${{ steps.build.outputs.digest }}
     steps:
       - run: |
+          mkdir /realtime
           mkdir /tmp/build-realtime
           cd /tmp/build-realtime
           wget https://github.com/supabase/realtime/archive/refs/tags/${{ inputs.version }}.tar.gz
           tar -xvzf ${{ inputs.version }}.tar.gz && rm -rf ${{ inputs.version }}.tar.gz
-          mv realtime-${{ inputs.version }}/* realtime-${{ inputs.version }}/.* . 2>/dev/null
+          mv realtime-${{ inputs.version }} /realtime
           rmdir realtime-${{ inputs.version }}
         continue-on-error: true
 
@@ -50,12 +51,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: cd /tmp/build-realtime && ls -la && exit 1
+      - run: cd /realtime && ls -la && exit 1
 
       - id: build
         uses: docker/build-push-action@v3
         with:
-          context: /tmp/build-realtime
+          context: /realtime
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/${{ env.arch }}
