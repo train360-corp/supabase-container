@@ -1,73 +1,4 @@
 ###############################################
-# Realtime Build (Compatibility Issue)
-# See: https://github.com/supabase/realtime/blob/main/Dockerfile
-###############################################
-FROM hexpm/elixir:1.17.3-erlang-27.1.2-ubuntu-focal-20241011 AS realtime-base
-
-ENV MIX_ENV="prod"
-
-RUN apt-get update -y \
-    && apt-get install curl wget -y \
-    && apt-get install -y build-essential git \
-    && apt-get clean
-
-RUN set -uex; \
-    apt-get update; \
-    apt-get install -y ca-certificates curl gnupg; \
-    mkdir -p /etc/apt/keyrings; \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
-    | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; \
-    NODE_MAJOR=18; \
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" \
-    > /etc/apt/sources.list.d/nodesource.list; \
-    apt-get -qy update; \
-    apt-get -qy install nodejs;
-
-# prepare build dir
-WORKDIR /app
-
-# download source code
-RUN wget https://github.com/supabase/realtime/archive/refs/tags/v2.34.31.tar.gz
-RUN tar -xvzf v2.34.31.tar.gz && rm -rf v2.34.31.tar.gz && mv realtime-2.34.31 /realtime-2.34.31
-
-# install hex + rebar
-RUN mix local.hex --force && \
-    mix local.rebar --force
-
-# install mix dependencies
-RUN mv /realtime-2.34.31/mix.exs .
-RUN mv /realtime-2.34.31/mix.lock .
-RUN mix deps.get --only prod
-RUN mkdir config
-
-# copy compile-time config files before we compile dependencies
-# to ensure any relevant config change will trigger the dependencies
-# to be re-compiled.
-RUN mv /realtime-2.34.31/config/config.exs config/
-RUN mv /realtime-2.34.31/config/prod.exs config/
-
-RUN mix deps.compile
-RUN mv /realtime-2.34.31/priv priv
-RUN mv /realtime-2.34.31/lib lib
-RUN mv /realtime-2.34.31/assets assets
-
-# compile assets with esbuild and npm
-RUN cd assets \
-    && npm install \
-    && cd .. \
-    && mix assets.deploy
-
-# Compile the release
-RUN mix compile
-
-# Changes to config/runtime.exs don't require recompiling the code
-RUN mv /realtime-2.34.31/config/runtime.exs config/
-RUN mv /realtime-2.34.31/rel rel
-RUN mix release
-
-
-
-###############################################
 # DATABASE (base image)
 # See: https://github.com/supabase/supabase/blob/master/docker/docker-compose.yml#L387
 ###############################################
@@ -203,6 +134,7 @@ ENV GOTRUE_DB_MIGRATIONS_PATH=/supabase/auth/migrations
 # REALTIME
 # See: https://github.com/supabase/realtime/blob/main/Dockerfile
 ###############################################
+FROM ghcr.io/train360-corp/realtime:v2.34.31 AS realtime-base
 FROM auth AS realtime
 
 WORKDIR /supabase/realtime
@@ -215,19 +147,6 @@ COPY --from=realtime-base /app /supabase/realtime
 
 # bug fix
 RUN sed -i 's|/app|/supabase/realtime|g' /supabase/realtime/run.sh
-#
-#RUN cd /usr/local/src && \
-#    sudo mkdir glibc-2.34 && \
-#    sudo chown $(whoami) glibc-2.34 && \
-#    cd glibc-2.34 && \
-#    wget http://ftp.gnu.org/gnu/libc/glibc-2.34.tar.gz && \
-#    tar -xvzf glibc-2.34.tar.gz && \
-#    cd glibc-2.34 && \
-#    mkdir build && \
-#    cd build && \
-#    ../configure --prefix=/opt/glibc-2.34
-#RUN cd /usr/local/src/glibc-2.34/glibc-2.34/build && make
-#RUN cd /usr/local/src/glibc-2.34/glibc-2.34/build && sudo make install
 
 ###############################################
 # SUPERVISOR
