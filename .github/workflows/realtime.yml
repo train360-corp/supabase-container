@@ -49,8 +49,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: cd ~/realtime && ls -la && exit 1
-
       - id: build
         uses: docker/build-push-action@v3
         with:
@@ -69,7 +67,13 @@ jobs:
     outputs:
       image_digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v3
+      - run: |
+          mkdir ~/realtime && cd ~/realtime
+          wget https://github.com/supabase/realtime/archive/refs/tags/${{ inputs.version }}.tar.gz
+          tar -xvzf ${{ inputs.version }}.tar.gz && rm -rf ${{ inputs.version }}.tar.gz
+          mv realtime-*/* realtime-*/.* . 2>/dev/null
+          rmdir realtime-*
+        continue-on-error: true
 
       - id: meta
         uses: docker/metadata-action@v4
