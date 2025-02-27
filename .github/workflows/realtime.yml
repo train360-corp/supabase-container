@@ -26,7 +26,7 @@ jobs:
       image_digest: ${{ steps.build.outputs.digest }}
     steps:
       - run: |
-          mkdir ~/realtime && cd ~/realtime
+          mkdir ${{ github.workspace }}/realtime && cd ${{ github.workspace }}/realtime
           wget https://github.com/supabase/realtime/archive/refs/tags/${{ inputs.version }}.tar.gz
           tar -xvzf ${{ inputs.version }}.tar.gz && rm -rf ${{ inputs.version }}.tar.gz
           mv realtime-*/* realtime-*/.* . 2>/dev/null
@@ -52,7 +52,7 @@ jobs:
       - id: build
         uses: docker/build-push-action@v3
         with:
-          context: ~/realtime
+          context: ${{ github.workspace }}/realtime
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/${{ env.arch }}
@@ -68,7 +68,7 @@ jobs:
       image_digest: ${{ steps.build.outputs.digest }}
     steps:
       - run: |
-          mkdir ~/realtime && cd ~/realtime
+          mkdir ${{ github.workspace }}/realtime && cd ${{ github.workspace }}/realtime
           wget https://github.com/supabase/realtime/archive/refs/tags/${{ inputs.version }}.tar.gz
           tar -xvzf ${{ inputs.version }}.tar.gz && rm -rf ${{ inputs.version }}.tar.gz
           mv realtime-*/* realtime-*/.* . 2>/dev/null
@@ -99,7 +99,7 @@ jobs:
       - id: build
         uses: docker/build-push-action@v3
         with:
-          context: ~/realtime
+          context: ${{ github.workspace }}/realtime
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/${{ env.arch }}
