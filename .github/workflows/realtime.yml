@@ -24,6 +24,9 @@ jobs:
       arch: amd64
     outputs:
       image_digest: ${{ steps.build.outputs.digest }}
+    permissions:
+      contents: read
+      packages: write
     steps:
       - run: |
           mkdir ${{ github.workspace }}/realtime && cd ${{ github.workspace }}/realtime
@@ -66,6 +69,9 @@ jobs:
       arch: arm64
     outputs:
       image_digest: ${{ steps.build.outputs.digest }}
+    permissions:
+      contents: read
+      packages: write
     steps:
       - run: |
           mkdir ${{ github.workspace }}/realtime && cd ${{ github.workspace }}/realtime
@@ -110,6 +116,9 @@ jobs:
       - amd
       - arm
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: docker/setup-buildx-action@v2
 
