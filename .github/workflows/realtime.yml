@@ -1,0 +1,97 @@
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "version to build"
+        required: true
+        type: string
+        default: v2.34.31
+#    outputs:
+#      amd:
+#        description: "Image digest from build"
+#        value: ${{ jobs.amd.outputs.image_digest }}
+#      arm:
+#        description: "Image digest from build"
+#        value: ${{ jobs.arm.outputs.image_digest }}
+
+jobs:
+  amd:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 120
+    env:
+      arch: amd64
+    outputs:
+      image_digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - run: |
+          mkdir /tmp/build-realtime
+          cd /tmp/build-realtime
+          wget https://github.com/supabase/realtime/archive/refs/tags/${{ inputs.version }}.tar.gz
+          tar -xvzf ${{ inputs.version }}.tar.gz && rm -rf ${{ inputs.version }}.tar.gz
+          mv realtime-${{ inputs.version }}/* realtime-${{ inputs.version }}/.* . 2>/dev/null
+          rmdir realtime-${{ inputs.version }}
+
+      - id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            supabase/realtime
+          tags: |
+            type=raw,value=${{ inputs.version }}_${{ env.arch }}
+
+      - uses: docker/setup-buildx-action@v2
+
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: build
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          platforms: linux/${{ env.arch }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  arm:
+    runs-on: 	ubuntu-24.04-arm
+    timeout-minutes: 120
+    env:
+      arch: arm64
+    outputs:
+      image_digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            supabase/realtime
+          tags: |
+            type=raw,value=${{ inputs.version }}_${{ env.arch }}
+
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/setup-buildx-action@v2
+        with:
+          driver: docker
+          driver-opts: |
+            image=moby/buildkit:master
+            network=host
+
+      - id: build
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          platforms: linux/${{ env.arch }}
+          no-cache: true

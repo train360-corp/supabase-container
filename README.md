@@ -59,7 +59,7 @@ The following Suapbase components have been successfully ported:
 | meta      | ✅         | 0.84.2           |
 | imgproxy  | ❌         |                  |
 | storage   | ❌         |                  |
-| realtime  | ❌         |                  |
+| realtime  | ✅         | 2.34.31          |
 | rest      | ✅         | 12.2.8           |
 | auth      | ✅         | 2.169.0          |
 | kong      | ✅         | 3.9.0            |
