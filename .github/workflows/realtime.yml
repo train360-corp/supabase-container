@@ -60,6 +60,8 @@ jobs:
           platforms: linux/${{ env.arch }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            DEBIAN_VERSION=bullseye-20241202-slim
 
   arm:
     runs-on: ubuntu-24.04-arm
@@ -111,6 +113,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/${{ env.arch }}
           no-cache: true
+          build-args: |
+            DEBIAN_VERSION=bullseye-20241202-slim
 
   merge:
     needs:
