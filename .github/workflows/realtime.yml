@@ -79,7 +79,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            supabase/realtime
+            ${{ github.repository }}-realtime
           tags: |
             type=raw,value=${{ inputs.version }}_${{ env.arch }}
 

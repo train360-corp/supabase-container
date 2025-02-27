@@ -59,10 +59,16 @@ The following Suapbase components have been successfully ported:
 | meta      | ✅         | 0.84.2           |
 | imgproxy  | ❌         |                  |
 | storage   | ❌         |                  |
-| realtime  | ✅         | 2.34.31          |
+| realtime  | ✅         | 2.34.31*         |
 | rest      | ✅         | 12.2.8           |
 | auth      | ✅         | 2.169.0          |
 | kong      | ✅         | 3.9.0            |
 | studio    | ✅         | 20250113-83c9420 |
 
 (*) indicates in-progress builds
+
+### Editors Notes
+
+#### realtime
+
+This package uses supabase's own postgres image as the base runtime. This image runs on Ubuntu Focal. However, realtime is built for Debian (a newer version). TLDR; a libc compatibility error occurs, requiring a custom build on an earlier version.
