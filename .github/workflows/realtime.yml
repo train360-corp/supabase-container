@@ -52,7 +52,7 @@ jobs:
       - id: build
         uses: docker/build-push-action@v3
         with:
-          context: /realtime
+          context: ~/realtime
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/${{ env.arch }}
@@ -99,7 +99,7 @@ jobs:
       - id: build
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ~/realtime
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/${{ env.arch }}
