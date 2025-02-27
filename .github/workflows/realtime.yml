@@ -53,6 +53,7 @@ jobs:
       - id: build
         uses: docker/build-push-action@v3
         with:
+          context: /tmp/build-realtime
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/${{ env.arch }}
