@@ -82,7 +82,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
 
-      - run: echo "SHORT_SHA=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_ENV
+      - run: |
+          echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+          echo "SHORT_SHA=${{ env.SHORT_SHA }}"
 
       - uses: actions/download-artifact@v4
         with:
