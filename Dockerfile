@@ -164,6 +164,7 @@ COPY ./supervisor/ /etc/supervisor/conf.d/
 
 # helper script to wait for db to start
 COPY start-with-db.sh /supabase/start-with-db.sh
+RUN chmod a+x /supabase/start-with-db.sh
 RUN ln -s /supabase/start-with-db.sh /usr/local/bin/start-with-db
 
 ###############################################
