@@ -39,10 +39,12 @@ WORKDIR /supabase/kong
 
 RUN curl -O https://raw.githubusercontent.com/Kong/docker-kong/master/docker-entrypoint.sh
 RUN chmod +x docker-entrypoint.sh
-RUN curl -O https://packages.konghq.com/public/gateway-39/deb/ubuntu/pool/focal/main/k/ko/kong_3.9.0/kong_3.9.0_amd64.deb
+
+ARG TARGETARCH
+RUN curl -O https://packages.konghq.com/public/gateway-39/deb/debian/pool/bullseye/main/k/ko/kong-enterprise-edition_3.9.0.1/kong-enterprise-edition_3.9.0.1_"$TARGETARCH".deb
 
 COPY supabase/kong.yml /tmp/kong.yml
-RUN mv kong_3.9.0_amd64.deb /tmp/kong.deb
+RUN mv kong-enterprise-edition_3.9.0.1_"$TARGETARCH".deb /tmp/kong.deb
 
 RUN set -ex; \
    apt-get update \
