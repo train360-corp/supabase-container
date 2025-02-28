@@ -167,6 +167,9 @@ COPY start-with-db.sh /supabase/start-with-db.sh
 RUN chmod a+x /supabase/start-with-db.sh
 RUN ln -s /supabase/start-with-db.sh /usr/local/bin/start-with-db
 
+# add custom hostname resolution
+RUN echo "127.0.0.1 realtime-dev.supabase-realtime" >> /etc/hosts
+
 ###############################################
 # (start)
 ###############################################
