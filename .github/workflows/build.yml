@@ -66,14 +66,15 @@ jobs:
           build-args: |
             DEBIAN_VERSION=bullseye-20241202-slim
 
-      - id: one
+      - name: Save Digest to File
         run: |
-          echo "${{ steps.build.outputs.digest }}" >> ${{ matrix.arch }}.txt
+          mkdir -p image-digests
+          echo "${{ steps.build.outputs.digest }}" > image-digests/${{ matrix.arch }}.txt
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.arch }}.txt
-          path: ${{ matrix.arch }}.txt
+          name: image-digests
+          path: image-digests/*.txt
 
 
   merge-manifest:
@@ -85,19 +86,14 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: amd64.txt
-          path: ./amd64.txt
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: arm64.txt
-          path: ./arm64.txt
+          name: image-digests
+          path: ./image-digests
 
       - name: Read Digests
         id: read-digests
         run: |
-          AMD_DIGEST=$(cat ./amd64.txt)
-          ARM_DIGEST=$(cat ./arm64.txt)
+          AMD_DIGEST=$(cat ./image-digests/amd64.txt)
+          ARM_DIGEST=$(cat ./image-digests/arm64.txt)
           echo "AMD_DIGEST=$AMD_DIGEST" >> $GITHUB_ENV
           echo "ARM_DIGEST=$ARM_DIGEST" >> $GITHUB_ENV
 
