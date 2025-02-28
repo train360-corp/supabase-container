@@ -28,8 +28,6 @@ jobs:
     timeout-minutes: 120
     env:
       arch: ${{ matrix.arch }}
-    outputs:
-      image_digest_${{ matrix.arch }}: ${{ steps.build.outputs.digest }}
     steps:
       - uses: actions/checkout@v4
 
@@ -63,6 +61,17 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             DEBIAN_VERSION=bullseye-20241202-slim
+
+      - id: one
+        run: |
+          echo "${{ steps.build.outputs.digest }}" >> outputs/${{ matrix.arch }}.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: outputs
+          path: outputs/*.txt
+
+
   print-digests:
     needs: build
     runs-on: ubuntu-24.04
