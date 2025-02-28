@@ -82,6 +82,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
 
+      - uses: actions/checkout@v4
+
       - run: |
           echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
           echo "SHORT_SHA=${{ env.SHORT_SHA }}"

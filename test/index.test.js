@@ -6,8 +6,6 @@ const {server} = require("./mock-smtp.js");
 // loads .env files
 dotenv.config({ path: "../.env" });
 
-// start mock smtp server
-server.listen(2500, () => {});
 
 const getClient = () => createClient(process.env.SUPABASE_PUBLIC_URL, process.env.SUPABASE_ANON_KEY)
 
@@ -19,10 +17,12 @@ test(".env loads", () => expect(process.env.SUPABASE_ANON_KEY).toBeTruthy())
 test("create client", () => expect(getClient()).toBeTruthy())
 
 test("empty user", async () => {
+  server.listen(2500, () => {});
   const client = getClient();
   const result = await client.auth.getSession();
   expect(result.error).toBeFalsy();
   expect(result.data.session).toBeNull();
+  await new Promise(resolve => server.close(resolve));
 })
 
 test("create user", async () => {
