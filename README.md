@@ -45,6 +45,14 @@ Mounting a local directory at /supabase/migrations will automatically trigger ru
 
 The local directory should be at the root level for the migrations.
 
+### Configuration
+
+Set the following environment variables in the .env file used to run the image
+
+```shell
+AUTO_MIGRATIONS_MODE=off # off (default), mounted
+```
+
 ## Roadmap
 
 * complete coverage

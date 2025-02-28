@@ -19,7 +19,7 @@ dep-meta: bin
 deps: dep-bin dep-meta dep-auth
 
 build: deps
-	docker build --platform linux/amd64 -t $(IMAGE_NAME) .
+	docker build -t $(IMAGE_NAME) .
 
 start: run
 
