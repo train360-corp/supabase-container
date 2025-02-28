@@ -31,6 +31,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - run: |
+          make build
+
       - id: meta
         uses: docker/metadata-action@v4
         with:
