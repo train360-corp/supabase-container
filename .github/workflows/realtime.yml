@@ -112,6 +112,7 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/realtime:${{ inputs.version }}_${{ env.arch }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/${{ env.arch }}
+          no-cache: true
           build-args: |
             DEBIAN_VERSION=bullseye-20241202-slim
 
