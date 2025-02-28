@@ -60,9 +60,9 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/supabase:${{ inputs.version }}_${{ env.arch }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/${{ env.arch }}
-          cache-from: ${{ matrix.arch == 'arm64' && '' || 'type=gha' }}
-          cache-to: ${{ matrix.arch == 'arm64' && '' || 'type=gha,mode=max' }}
-          no-cache: ${{ matrix.arch == 'arm64' && 'true' || 'false' }}
+          cache-from: ${{ matrix.arch == 'arm64' && ' ' || 'type=gha' }}
+          cache-to: ${{ matrix.arch == 'arm64' && ' ' || 'type=gha,mode=max' }}
+          no-cache: ${{ matrix.arch == 'arm64' }}
           build-args: |
             DEBIAN_VERSION=bullseye-20241202-slim
 
