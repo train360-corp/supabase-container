@@ -162,6 +162,10 @@ RUN apt-get update -y && \
 RUN mkdir -p /var/log/supervisor
 COPY ./supervisor/ /etc/supervisor/conf.d/
 
+# helper script to wait for db to start
+COPY start-with-db.sh /supabase/start-with-db.sh
+RUN ln -s /supabase/start-with-db.sh /usr/local/bin/start-with-db
+
 ###############################################
 # (start)
 ###############################################
