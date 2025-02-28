@@ -14,29 +14,29 @@ curl -OL https://raw.githubusercontent.com/train360-corp/supabase-container/refs
 # start supabase
 
 docker run \
+  --add-host=realtime-dev.supabase-realtime:127.0.0.1 \
   -v ./pg_data:/var/lib/postgresql/data \
   --env-file ./.env \
-  --platform linux/amd64 \
   --rm \
   -d \
   --name supabase \
   -p 5432:5432 \
   -p 8000:8000 \
   -p 8443:8443 \
-  ghcr.io/train360-corp/supabase-container:latest
+  ghcr.io/train360-corp/supabase:latest
 
 # FOR REFERENCE ONLY (COPY AND PASTE ABOVE)
 docker run \
+  --add-host=realtime-dev.supabase-realtime:127.0.0.1 \ # realtime internal network bridge between Kong and Realtime (DO NOT CHANGE)
   -v ./pg_data:/var/lib/postgresql/data \ # postgres data persisted locally
   --env-file ./.env \ # load env file
-  --platform linux/amd64 \ # ensure cross-platform support on mac
   --rm \ # remove container when stopped
   -d \ # detach (run in background)
   --name supabase \
   -p 5432:5432 \ # postgres port
   -p 8000:8000 \ # kong http port
   -p 8443:8443 \ # kong https port
-  ghcr.io/train360-corp/supabase-container:latest
+  ghcr.io/train360-corp/supabase:latest
 ```
 
 ## Roadmap
