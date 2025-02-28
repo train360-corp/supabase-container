@@ -15,10 +15,10 @@ curl -OL https://raw.githubusercontent.com/train360-corp/supabase-container/refs
 
 docker run \
   --add-host=realtime-dev.supabase-realtime:127.0.0.1 \
-  -v ./pg_data:/var/lib/postgresql/data \
+  --volume ./pg_data:/var/lib/postgresql/data \
   --env-file ./.env \
   --rm \
-  -d \
+  --detach \
   --name supabase \
   -p 5432:5432 \
   -p 8000:8000 \
@@ -28,16 +28,22 @@ docker run \
 # FOR REFERENCE ONLY (COPY AND PASTE ABOVE)
 docker run \
   --add-host=realtime-dev.supabase-realtime:127.0.0.1 \ # realtime internal network bridge between Kong and Realtime (DO NOT CHANGE)
-  -v ./pg_data:/var/lib/postgresql/data \ # postgres data persisted locally
+  --volume ./pg_data:/var/lib/postgresql/data \ # postgres data persisted locally
   --env-file ./.env \ # load env file
   --rm \ # remove container when stopped
-  -d \ # detach (run in background)
+  --detach \ # detach (run in background)
   --name supabase \
   -p 5432:5432 \ # postgres port
   -p 8000:8000 \ # kong http port
   -p 8443:8443 \ # kong https port
   ghcr.io/train360-corp/supabase:latest
 ```
+
+## Automatic Migrations Support
+
+Mounting a local directory at /supabase/migrations will automatically trigger running migration scripts.
+
+The local directory should be at the root level for the migrations.
 
 ## Roadmap
 

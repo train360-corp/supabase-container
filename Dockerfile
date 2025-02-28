@@ -41,10 +41,10 @@ RUN curl -O https://raw.githubusercontent.com/Kong/docker-kong/master/docker-ent
 RUN chmod +x docker-entrypoint.sh
 
 ARG TARGETARCH
-RUN curl -O https://packages.konghq.com/public/gateway-39/deb/debian/pool/bullseye/main/k/ko/kong-enterprise-edition_3.9.0.1/kong-enterprise-edition_3.9.0.1_"$TARGETARCH".deb
+RUN curl -O https://packages.konghq.com/public/gateway-39/deb/debian/pool/bullseye/main/k/ko/kong-enterprise-edition_3.9.0.1/kong-enterprise-edition_3.9.0.1_$TARGETARCH.deb
 
 COPY supabase/kong.yml /tmp/kong.yml
-RUN mv kong-enterprise-edition_3.9.0.1_"$TARGETARCH".deb /tmp/kong.deb
+RUN mv kong-enterprise-edition_3.9.0.1_$TARGETARCH.deb /tmp/kong.deb
 
 RUN set -ex; \
    apt-get update \
@@ -156,6 +156,11 @@ RUN sed -i 's|/app|/supabase/realtime|g' /supabase/realtime/run.sh
 ###############################################
 FROM realtime AS supervisor
 
+# install supabase cli
+RUN curl -O -L https://github.com/supabase/cli/releases/download/v2.15.8/supabase_2.15.8_linux_$TARGETARCH.deb
+RUN dpkg -i ./supabase_2.15.8_linux_$TARGETARCH.deb
+RUN echo "project_id = \"test\"" > /supabase/config.toml
+
 RUN apt-get update -y && \
     apt-get install -y supervisor && \
     apt-get clean && rm -f /var/lib/apt/lists/*_*
@@ -163,12 +168,12 @@ RUN mkdir -p /var/log/supervisor
 COPY ./supervisor/ /etc/supervisor/conf.d/
 
 # helper script to wait for db to start
-COPY start-with-db.sh /supabase/start-with-db.sh
+COPY ./scripts/start-with-db.sh /supabase/start-with-db.sh
+COPY ./scripts/with-migrations.sh /supabase/with-migrations.sh
 RUN chmod a+x /supabase/start-with-db.sh
+RUN chmod a+x /supabase/with-migrations.sh
 RUN ln -s /supabase/start-with-db.sh /usr/local/bin/start-with-db
-
-# add custom hostname resolution
-RUN echo "127.0.0.1 realtime-dev.supabase-realtime" >> /etc/hosts
+RUN ln -s /supabase/with-migrations.sh /usr/local/bin/with-migrations
 
 ###############################################
 # (start)
