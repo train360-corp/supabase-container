@@ -41,23 +41,16 @@ docker run \
 
 ## Automatic Migrations Support
 
-Mounting a local directory at /supabase/migrations will automatically trigger running migration scripts.
+Set the environment variable `AUTO_MIGRATIONS_MODE`.
 
-The local directory should be at the root level for the migrations.
+- `AUTO_MIGRATIONS_MODE=off` (default)
 
-### Configuration
+  - No migrations will be applied.
 
-Set the following environment variables in the .env file used to run the image
+- `AUTO_MIGRATIONS_MODE=mounted`
 
-```shell
-AUTO_MIGRATIONS_MODE=off # off (default), mounted
-```
-
-## Roadmap
-
-* complete coverage
-* one-click deploy options
-    * Digital Ocean
+  - Mount (or custom-build) a local directory at /supabase/migrations. 
+  - The local directory should be at the root level for the migrations.
 
 ## Coverage
 

@@ -182,4 +182,4 @@ FROM supervisor AS runner
 
 WORKDIR /
 
-CMD ["/usr/bin/supervisord"]
+ENTRYPOINT ["/usr/bin/supervisord"]
