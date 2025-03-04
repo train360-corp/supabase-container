@@ -181,5 +181,7 @@ RUN ln -s /supabase/with-migrations.sh /usr/local/bin/with-migrations
 FROM supervisor AS runner
 
 WORKDIR /
+COPY docker-entrypoint.sh .
+RUN chmod a+x /docker-entrypoint.sh
 
-ENTRYPOINT ["/usr/bin/supervisord"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

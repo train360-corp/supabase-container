@@ -25,7 +25,6 @@ start: run
 
 run: stop
 	docker run \
-		--add-host=realtime-dev.supabase-realtime:127.0.0.1 \
 		-v ./test/supabase/migrations:/supabase/migrations \
 		-v ./pg_data:/var/lib/postgresql/data \
 		--env-file ./.env \

@@ -38,7 +38,7 @@ basicauth_credentials:
 services:
   ## Open Auth routes
   - name: auth-v1-open
-    url: http://auth:9999/verify
+    url: http://127.0.0.1:9999/verify
     routes:
       - name: auth-v1-open
         strip_path: true
@@ -47,7 +47,7 @@ services:
     plugins:
       - name: cors
   - name: auth-v1-open-callback
-    url: http://auth:9999/callback
+    url: http://127.0.0.1:9999/callback
     routes:
       - name: auth-v1-open-callback
         strip_path: true
@@ -56,7 +56,7 @@ services:
     plugins:
       - name: cors
   - name: auth-v1-open-authorize
-    url: http://auth:9999/authorize
+    url: http://127.0.0.1:9999/authorize
     routes:
       - name: auth-v1-open-authorize
         strip_path: true
@@ -89,7 +89,7 @@ services:
   ## Secure REST routes
   - name: rest-v1
     _comment: 'PostgREST: /rest/v1/* -> http://rest:3000/*'
-    url: http://rest:3000/
+    url: http://127.0.0.1:3000/
     routes:
       - name: rest-v1-all
         strip_path: true
@@ -110,7 +110,7 @@ services:
   ## Secure GraphQL routes
   - name: graphql-v1
     _comment: 'PostgREST: /graphql/v1/* -> http://rest:3000/rpc/graphql'
-    url: http://rest:3000/rpc/graphql
+    url: http://127.0.0.1:3000/rpc/graphql
     routes:
       - name: graphql-v1-all
         strip_path: true
@@ -177,7 +177,7 @@ services:
   ## Storage routes: the storage server manages its own auth
   - name: storage-v1
     _comment: 'Storage: /storage/v1/* -> http://storage:5000/*'
-    url: http://storage:5000/
+    url: http://127.0.0.1:5000/
     routes:
       - name: storage-v1-all
         strip_path: true
@@ -189,7 +189,7 @@ services:
   ## Edge Functions routes
   - name: functions-v1
     _comment: 'Edge Functions: /functions/v1/* -> http://functions:9000/*'
-    url: http://functions:9000/
+    url: http://127.0.0.1:9000/
     routes:
       - name: functions-v1-all
         strip_path: true
