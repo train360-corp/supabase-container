@@ -13,7 +13,7 @@ dep-auth:
 
 dep-meta: bin
 	test -d bin/postgres-meta || ( \
-		git clone --depth=1 --branch v0.84.2 https://github.com/supabase/postgres-meta.git bin/postgres-meta \
+		git clone --depth=1 --branch v0.86.3 https://github.com/supabase/postgres-meta.git bin/postgres-meta \
 	)
 
 deps: dep-bin dep-meta dep-auth

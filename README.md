@@ -56,7 +56,7 @@ The following Suapbase components have been successfully ported:
 | db        | 5432                                                                                        | ✅         | 15.8.1.020       |
 | analytics |                                                                                             | ❌         |                  |
 | functions | 9000                                                                                        | ❌         |                  |
-| meta      | 8080                                                                                        | ✅         | 0.84.2           |
+| meta      | 8080                                                                                        | ✅         | 0.86.3           |
 | imgproxy  |                                                                                             | ❌         |                  |
 | storage   | 5000                                                                                        | ❌         |                  |
 | realtime  | 4000                                                                                        | ✅         | 2.34.31          |
