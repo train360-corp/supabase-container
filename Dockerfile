@@ -151,10 +151,21 @@ COPY --from=realtime-base /app /supabase/realtime
 RUN sed -i 's|/app|/supabase/realtime|g' /supabase/realtime/run.sh
 
 ###############################################
+# STORAGE
+# See: https://github.com/supabase/realtime/blob/main/Dockerfile
+###############################################
+FROM ghcr.io/supabase/storage-api:v1.25.12 AS storage-base
+FROM realtime AS storage
+
+WORKDIR /supabase/storage
+
+COPY --from=storage-base /app /supabase/storage
+
+###############################################
 # SUPERVISOR
 # See: https://docs.docker.com/engine/containers/multi-service_container/#use-a-process-manager
 ###############################################
-FROM realtime AS supervisor
+FROM storage AS supervisor
 
 # install supabase cli
 RUN curl -O -L https://github.com/supabase/cli/releases/download/v2.15.8/supabase_2.15.8_linux_$TARGETARCH.deb

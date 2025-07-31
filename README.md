@@ -15,7 +15,11 @@ curl -OL https://raw.githubusercontent.com/train360-corp/supabase-container/refs
 
 docker run \
   --volume ./pg_data:/var/lib/postgresql/data \
+  --volume ./storage_data:/supabase/storage/data \
   --env-file ./.env \
+  --rm \
+  --detach \
+  --name supabase \
   -p 5432:5432 \
   -p 8000:8000 \
   ghcr.io/train360-corp/supabase:latest
@@ -23,6 +27,7 @@ docker run \
 # FOR REFERENCE ONLY (COPY AND PASTE ABOVE)
 docker run \
   --volume ./pg_data:/var/lib/postgresql/data \ # postgres data persisted locally
+  --volume ./storage_data:/supabase/storage/data \ # storage data persisted locally
   --env-file ./.env \ # load env file
   --rm \ # remove container when stopped
   --detach \ # detach (run in background)
