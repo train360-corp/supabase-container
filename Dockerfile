@@ -203,10 +203,13 @@ COPY ./supervisor/ /etc/supervisor/conf.d/
 # helper script to wait for db to start
 COPY ./scripts/start-with-db.sh /supabase/start-with-db.sh
 COPY ./scripts/with-migrations.sh /supabase/with-migrations.sh
+COPY ./scripts/with-seeds.sh /supabase/with-seeds.sh
 RUN chmod a+x /supabase/start-with-db.sh
 RUN chmod a+x /supabase/with-migrations.sh
+RUN chmod a+x /supabase/with-seeds.sh
 RUN ln -s /supabase/start-with-db.sh /usr/local/bin/start-with-db
 RUN ln -s /supabase/with-migrations.sh /usr/local/bin/with-migrations
+RUN ln -s /supabase/with-seeds.sh /usr/local/bin/with-seeds
 
 ###############################################
 # (start)

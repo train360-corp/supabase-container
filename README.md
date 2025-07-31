@@ -48,7 +48,21 @@ Set the environment variable `AUTO_MIGRATIONS_MODE`.
 - `AUTO_MIGRATIONS_MODE=mounted`
 
     - Mount (or custom-build) a local directory at /supabase/migrations.
-    - The local directory should be at the root level for the migrations.
+    - The local directory should be at the root level for the migration files (*.sql).
+
+## Automatic Seeding Support
+
+Set the environment variable `AUTO_SEEDING_MODE`.
+
+- `AUTO_SEEDING_MODE=off` (default)
+
+  - No seeds will be applied.
+
+- `AUTO_SEEDING_MODE=mounted`
+
+  - Mount (or custom-build) a local directory at /supabase/seeds.
+  - The local directory should be at the root level for the seed files (*.sql).
+
 
 ## Coverage
 
