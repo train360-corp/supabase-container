@@ -63,7 +63,7 @@ The following Suapbase components have been successfully ported:
 | functions | 9000                                                                                        | ❌         |                  |
 | meta      | 8080                                                                                        | ✅         | 0.86.3           |
 | imgproxy  |                                                                                             | ❌         |                  |
-| storage   | 5000                                                                                        | ❌         |                  |
+| storage   | 5000                                                                                        | ✅         | 1.25.12          |
 | realtime  | 4000                                                                                        | ✅         | 2.34.31          |
 | rest      | 3000                                                                                        | ✅         | 12.2.8           |
 | auth      | 9999                                                                                        | ✅         | 2.169.0          |
@@ -72,7 +72,8 @@ The following Suapbase components have been successfully ported:
 
 (*) indicates in-progress builds
 
-[1] Kong uses multiple ports (with 8000 being the default gateway); see the full list here: https://docs.konghq.com/gateway/latest/production/networking/default-ports/#main
+[1] Kong uses multiple ports (with 8000 being the default gateway); see the full list
+here: https://docs.konghq.com/gateway/latest/production/networking/default-ports/#main
 
 ### Editors Notes
 

@@ -152,10 +152,32 @@ RUN sed -i 's|/app|/supabase/realtime|g' /supabase/realtime/run.sh
 
 ###############################################
 # STORAGE
-# See: https://github.com/supabase/realtime/blob/main/Dockerfile
+# See: https://github.com/supabase/storage/blob/master/Dockerfile
 ###############################################
-FROM ghcr.io/supabase/storage-api:v1.25.12 AS storage-base
-FROM realtime AS storage
+FROM realtime AS storage-base
+
+# Install Git and build dependencies
+RUN apt-get update && apt-get install -y \
+  git g++ make python3 \
+  && rm -rf /var/lib/apt/lists/*
+
+# Clone Supabase Storage and checkout the exact commit
+WORKDIR /build
+RUN git clone https://github.com/supabase/storage.git
+WORKDIR /build/storage
+RUN git checkout 2dd4efd35367c2008d162cdf56a67611990fce21
+
+# Install dependencies, build, and prune dev-only packages
+RUN npm ci && npm run build && npm prune --omit=dev
+
+# Copy only necessary output to /app
+WORKDIR /app
+RUN cp -r /build/storage/dist ./dist \
+  && cp -r /build/storage/migrations ./migrations \
+  && cp    /build/storage/package.json ./package.json \
+  && cp -r /build/storage/node_modules ./node_modules
+
+FROM storage-base AS storage
 
 WORKDIR /supabase/storage
 
