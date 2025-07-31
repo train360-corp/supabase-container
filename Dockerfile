@@ -154,7 +154,7 @@ RUN sed -i 's|/app|/supabase/realtime|g' /supabase/realtime/run.sh
 # STORAGE
 # See: https://github.com/supabase/storage/blob/master/Dockerfile
 ###############################################
-FROM realtime AS storage-base
+FROM node:22-slim AS storage-builder
 
 # Install Git and build dependencies
 RUN apt-get update && apt-get install -y \
@@ -177,11 +177,11 @@ RUN cp -r /build/storage/dist ./dist \
   && cp    /build/storage/package.json ./package.json \
   && cp -r /build/storage/node_modules ./node_modules
 
-FROM storage-base AS storage
+FROM realtime AS storage
 
 WORKDIR /supabase/storage
 
-COPY --from=storage-base /app /supabase/storage
+COPY --from=storage-builder /app /supabase/storage
 
 ###############################################
 # SUPERVISOR
